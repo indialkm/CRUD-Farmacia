@@ -2,15 +2,21 @@ package com.farmacia.farmaco.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -32,13 +38,12 @@ public class Categoria {
 	@Size(max = 255, message = "O status da categoria deve ter no máximo 255 caracteres")
 	private String status;
 	
-	@ManyToOne
-	//@JsonIgnoreProperties("categoria")
-	private Categoria categoria;
+	@UpdateTimestamp
+	private LocalDateTime data;
 	
-	//@ManyToOne
-	//@JsonIgnoreProperties("produto")
-	private String produto;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties("categoria")
+	private List<Produto> produto;
 
 	public Long getId() {
 		return id;
@@ -72,23 +77,23 @@ public class Categoria {
 		this.status = status;
 	}
 
-	public Categoria getCategoria() {
-		return categoria;
+	public LocalDateTime getData() {
+		return data;
 	}
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
+	public void setData(LocalDateTime data) {
+		this.data = data;
 	}
 
-	public String getProduto() {
+	public List<Produto> getProduto() {
 		return produto;
 	}
 
-	public void setProduto(String produto) {
+	public void setProduto(List<Produto> produto) {
 		this.produto = produto;
 	}
-	
-	
+
 
 	
+
 }
